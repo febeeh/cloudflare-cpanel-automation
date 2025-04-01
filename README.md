@@ -35,8 +35,10 @@ Register Account Deletion Hook
 ```
 Ensure the scripts are listed under the appropriate events.
 
-## Configuration (```.env```)
+## Setting Database
+Import ```sql_structure.sql``` file into your mysql database.
 
+## Configuration (```.env```)
 ```bash
 # Database
 MYSQL_HOST=your_mysql_host
