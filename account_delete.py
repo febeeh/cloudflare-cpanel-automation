@@ -79,6 +79,9 @@ def get_domain_from_cpanel(user):
 def delete_domain_from_cloudflare(domain, db_connection, cursor):
     try:
         CLOUDFLARE_API_TOKEN = os.getenv("API_TOKEN")
+        MYSQL_TABLE=os.getenv("MYSQL_TABLE")
+        if not MYSQL_TABLE or not MYSQL_TABLE.isidentifier():
+            raise ValueError("Invalid table name")
         # Get the Zone ID
         url = f"https://api.cloudflare.com/client/v4/zones?name={domain}"
         headers = {
@@ -100,7 +103,7 @@ def delete_domain_from_cloudflare(domain, db_connection, cursor):
 
             if delete_data["success"]:
                 print(f"Successfully deleted domain {domain}")
-                delete_query = "DELETE FROM knot_cf_domain WHERE domain = %s"
+                delete_query = f"DELETE FROM {MYSQL_TABLE} WHERE domain = %s"
                 cursor.execute(delete_query, (domain,))
                 db_connection.commit()
             else:

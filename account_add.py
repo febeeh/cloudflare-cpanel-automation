@@ -57,7 +57,9 @@ def add_domain_to_cloudflare(db_connection,cursor, username, domain):
         CLOUDFLARE_API_TOKEN = os.getenv("API_TOKEN")
         CLOUDFLARE_API_ACCOUNT_ID = os.getenv("API_ACCOUNT")
         CLOUDFLARE_ACCOUNT_EMAIL = os.getenv("CLOUDFLARE_ACCOUNT_EMAIL")
-
+        MYSQL_TABLE=os.getenv("MYSQL_TABLE")
+        if not MYSQL_TABLE or not MYSQL_TABLE.isidentifier():
+            raise ValueError("Invalid table name")
         url = "https://api.cloudflare.com/client/v4/zones"
         headers = {
             'Authorization': f'Bearer {CLOUDFLARE_API_TOKEN}',
@@ -77,7 +79,7 @@ def add_domain_to_cloudflare(db_connection,cursor, username, domain):
             ns2 = nameserver[1]
             cp_id = 2
             cp_user = username
-            insert_query = "INSERT INTO knot_cf_domain (domain, ns1, ns2, cf_account, cp_id, cp_user) VALUES (%s, %s, %s, %s, %s, %s)"
+            insert_query = f"INSERT INTO {MYSQL_TABLE} (domain, ns1, ns2, cf_account, cp_id, cp_user) VALUES (%s, %s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (domain, ns1, ns2, CLOUDFLARE_ACCOUNT_EMAIL, cp_id, cp_user))
             db_connection.commit()
             return response_data["result"]["id"]
