@@ -35,7 +35,7 @@ Register Account Deletion Hook
 ```
 Ensure the scripts are listed under the appropriate events.
 
-## Configuration
+## Configuration (```.env```)
 
 ```bash
 # Database
